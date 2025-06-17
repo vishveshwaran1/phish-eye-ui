@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Cybersecurity Dashboard Design System */
+/* Enhanced Cybersecurity Dashboard Design System */
 
 @layer base {
   :root {
@@ -38,43 +38,46 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  /* Dark theme - cybersecurity focused */
+  /* Dark theme - enhanced cybersecurity focused */
   .dark {
-    --background: 217 19% 8%;
-    --foreground: 213 31% 91%;
-    --card: 217 19% 10%;
-    --card-foreground: 213 31% 91%;
-    --popover: 217 19% 10%;
-    --popover-foreground: 213 31% 91%;
+    --background: 217 19% 6%;
+    --foreground: 213 31% 92%;
+    --card: 217 19% 8%;
+    --card-foreground: 213 31% 92%;
+    --popover: 217 19% 8%;
+    --popover-foreground: 213 31% 92%;
     --primary: 200 100% 50%;
-    --primary-foreground: 217 19% 8%;
-    --secondary: 217 19% 15%;
-    --secondary-foreground: 213 31% 91%;
-    --muted: 217 19% 15%;
-    --muted-foreground: 215.4 16.3% 56.9%;
-    --accent: 217 19% 15%;
-    --accent-foreground: 213 31% 91%;
+    --primary-foreground: 217 19% 6%;
+    --secondary: 217 19% 12%;
+    --secondary-foreground: 213 31% 92%;
+    --muted: 217 19% 12%;
+    --muted-foreground: 215.4 16.3% 58%;
+    --accent: 217 19% 12%;
+    --accent-foreground: 213 31% 92%;
     --destructive: 0 62.8% 50.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217 19% 15%;
-    --input: 217 19% 15%;
+    --border: 217 19% 12%;
+    --input: 217 19% 12%;
     --ring: 200 100% 50%;
-    --sidebar-background: 217 19% 8%;
-    --sidebar-foreground: 213 31% 91%;
+    --sidebar-background: 217 19% 6%;
+    --sidebar-foreground: 213 31% 92%;
     --sidebar-primary: 200 100% 50%;
-    --sidebar-primary-foreground: 217 19% 8%;
-    --sidebar-accent: 217 19% 12%;
-    --sidebar-accent-foreground: 213 31% 91%;
-    --sidebar-border: 217 19% 15%;
+    --sidebar-primary-foreground: 217 19% 6%;
+    --sidebar-accent: 217 19% 10%;
+    --sidebar-accent-foreground: 213 31% 92%;
+    --sidebar-border: 217 19% 12%;
     --sidebar-ring: 200 100% 50%;
     
-    /* Custom cybersecurity colors */
+    /* Enhanced cybersecurity colors */
     --cyber-blue: 200 100% 50%;
+    --cyber-cyan: 180 100% 50%;
     --cyber-green: 142 71% 45%;
     --cyber-red: 0 84% 60%;
     --cyber-orange: 25 95% 53%;
-    --threat-high: 0 84% 60%;
-    --threat-medium: 25 95% 53%;
+    --cyber-purple: 260 85% 65%;
+    --threat-critical: 0 84% 60%;
+    --threat-high: 25 95% 53%;
+    --threat-medium: 45 93% 58%;
     --threat-low: 142 71% 45%;
     --threat-safe: 120 50% 50%;
   }
@@ -87,32 +90,114 @@
 
   body {
     @apply bg-background text-foreground dark;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-/* Custom glassmorphism utilities */
+/* Enhanced glassmorphism and cyber utilities */
 @layer components {
   .glass-card {
-    @apply bg-card/80 backdrop-blur-sm border border-border/50 shadow-lg;
+    @apply bg-card/60 backdrop-blur-xl border border-border/30 shadow-2xl shadow-black/10;
   }
   
   .cyber-glow {
-    @apply shadow-[0_0_20px_rgba(0,191,255,0.3)];
+    @apply shadow-[0_0_20px_rgba(0,191,255,0.3)] ring-1 ring-blue-500/20;
+  }
+  
+  .cyber-glow-intense {
+    @apply shadow-[0_0_40px_rgba(0,191,255,0.5)] ring-2 ring-blue-500/30;
+  }
+  
+  .threat-critical {
+    @apply text-red-400 bg-red-500/10 border-red-500/30 shadow-red-500/20;
   }
   
   .threat-high {
-    @apply text-red-400 bg-red-500/10 border-red-500/30;
+    @apply text-orange-400 bg-orange-500/10 border-orange-500/30 shadow-orange-500/20;
   }
   
   .threat-medium {
-    @apply text-orange-400 bg-orange-500/10 border-orange-500/30;
+    @apply text-yellow-400 bg-yellow-500/10 border-yellow-500/30 shadow-yellow-500/20;
   }
   
   .threat-low {
-    @apply text-yellow-400 bg-yellow-500/10 border-yellow-500/30;
+    @apply text-green-400 bg-green-500/10 border-green-500/30 shadow-green-500/20;
   }
   
   .threat-safe {
-    @apply text-green-400 bg-green-500/10 border-green-500/30;
+    @apply text-emerald-400 bg-emerald-500/10 border-emerald-500/30 shadow-emerald-500/20;
+  }
+
+  /* Gradient backgrounds */
+  .gradient-bg {
+    @apply bg-gradient-to-br from-background via-background/95 to-card/50;
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl;
+  }
+
+  /* Custom scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground));
+  }
+}
+
+/* Enhanced animations */
+@layer utilities {
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+    }
+    to {
+      box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+    }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
