@@ -6,6 +6,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import ScanEmail from "./pages/ScanEmail";
+import SuspiciousInbox from "./pages/SuspiciousInbox";
+import Reports from "./pages/Reports";
+import ThreatInsights from "./pages/ThreatInsights";
+import Settings from "./pages/Settings";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
