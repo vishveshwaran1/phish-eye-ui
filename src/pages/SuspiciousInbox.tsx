@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +7,12 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, Filter, AlertTriangle, Shield, Clock, Flag } from 'lucide-react';
 
-const SuspiciousInbox = () => {
+interface SuspiciousInboxProps {
+  userRole?: string;
+  onLogout?: () => void;
+}
+
+const SuspiciousInbox: React.FC<SuspiciousInboxProps> = ({ userRole, onLogout }) => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -59,7 +63,7 @@ const SuspiciousInbox = () => {
   };
 
   return (
-    <Layout>
+    <Layout userRole={userRole} onLogout={onLogout}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>

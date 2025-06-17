@@ -1,11 +1,15 @@
-
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Globe, Users, Activity, AlertTriangle, Shield } from 'lucide-react';
 
-const ThreatInsights = () => {
+interface ThreatInsightsProps {
+  userRole?: string;
+  onLogout?: () => void;
+}
+
+const ThreatInsights: React.FC<ThreatInsightsProps> = ({ userRole, onLogout }) => {
   const topThreats = [
     { type: "Business Email Compromise", count: 156, trend: "+23%" },
     { type: "Credential Harvesting", count: 134, trend: "+18%" },
@@ -50,7 +54,7 @@ const ThreatInsights = () => {
   ];
 
   return (
-    <Layout>
+    <Layout userRole={userRole} onLogout={onLogout}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>

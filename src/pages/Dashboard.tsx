@@ -6,9 +6,14 @@ import { ThreatChart } from '@/components/dashboard/ThreatChart';
 import { EmailFeed } from '@/components/dashboard/EmailFeed';
 import { Search, Flag, Bell, Settings } from 'lucide-react';
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  userRole?: string;
+  onLogout?: () => void;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ userRole, onLogout }) => {
   return (
-    <Layout>
+    <Layout userRole={userRole} onLogout={onLogout}>
       <div className="space-y-6 animate-fade-in">
         <div className="flex justify-between items-center">
           <div>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FileText, Download, Calendar, TrendingUp, AlertCircle, Shield } from 'lucide-react';
 
-const Reports = () => {
+interface ReportsProps {
+  userRole?: string;
+  onLogout?: () => void;
+}
+
+const Reports: React.FC<ReportsProps> = ({ userRole, onLogout }) => {
   const reports = [
     {
       id: 1,
@@ -72,7 +76,7 @@ const Reports = () => {
   ];
 
   return (
-    <Layout>
+    <Layout userRole={userRole} onLogout={onLogout}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>

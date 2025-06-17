@@ -8,7 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Shield, User, Lock, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+interface LoginProps {
+  onLogin: (role: string) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [userRole, setUserRole] = useState('user');
   const [email, setEmail] = useState('');
@@ -17,8 +21,22 @@ const Login = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // For demo purposes, just navigate to dashboard
-    navigate('/');
+    
+    // Simple demo authentication
+    const validCredentials = {
+      'user@company.com': { password: 'user123', role: 'user' },
+      'analyst@company.com': { password: 'analyst123', role: 'analyst' },
+      'admin@company.com': { password: 'admin123', role: 'admin' }
+    };
+
+    const user = validCredentials[email as keyof typeof validCredentials];
+    
+    if (user && user.password === password && user.role === userRole) {
+      onLogin(userRole);
+      navigate('/');
+    } else {
+      alert('Invalid credentials. Please check the demo credentials below.');
+    }
   };
 
   const getRoleInfo = (role: string) => {

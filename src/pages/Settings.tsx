@@ -1,28 +1,106 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Settings as SettingsIcon, Shield, Bell, User, Globe, Lock } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Settings as SettingsIcon, 
+  Shield, 
+  Bell, 
+  Mail, 
+  Users, 
+  Database,
+  Lock,
+  AlertTriangle
+} from 'lucide-react';
 
-const Settings = () => {
+interface SettingsProps {
+  userRole?: string;
+  onLogout?: () => void;
+}
+
+const Settings: React.FC<SettingsProps> = ({ userRole = 'user', onLogout }) => {
+  const [notifications, setNotifications] = useState(true);
+  const [autoScan, setAutoScan] = useState(true);
+  const [realTimeProtection, setRealTimeProtection] = useState(true);
+
+  const isAdmin = userRole === 'admin';
+  const isAnalyst = userRole === 'analyst' || userRole === 'admin';
+
   return (
-    <Layout>
+    <Layout userRole={userRole} onLogout={onLogout}>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
-            Settings
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Configure your security preferences and system settings
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              Settings
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Configure your security preferences and system settings
+            </p>
+          </div>
+          <Badge className={`${
+            isAdmin ? 'bg-red-500/20 text-red-400 border-red-500/30' : 
+            isAnalyst ? 'bg-purple-500/20 text-purple-400 border-purple-500/30' : 
+            'bg-blue-500/20 text-blue-400 border-blue-500/30'
+          }`}>
+            {userRole.toUpperCase()} Access
+          </Badge>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* User Preferences */}
+          <Card className="glass-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <SettingsIcon className="w-5 h-5 text-blue-400" />
+                User Preferences
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <Label htmlFor="notifications">Email Notifications</Label>
+                  <p className="text-sm text-muted-foreground">Receive alerts for new threats</p>
+                </div>
+                <Switch
+                  id="notifications"
+                  checked={notifications}
+                  onCheckedChange={setNotifications}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <Label htmlFor="auto-scan">Auto-Scan Emails</Label>
+                  <p className="text-sm text-muted-foreground">Automatically scan incoming emails</p>
+                </div>
+                <Switch
+                  id="auto-scan"
+                  checked={autoScan}
+                  onCheckedChange={setAutoScan}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <Label htmlFor="real-time">Real-time Protection</Label>
+                  <p className="text-sm text-muted-foreground">Monitor threats in real-time</p>
+                </div>
+                <Switch
+                  id="real-time"
+                  checked={realTimeProtection}
+                  onCheckedChange={setRealTimeProtection}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Security Settings */}
           <Card className="glass-card">
             <CardHeader>
@@ -31,188 +109,123 @@ const Settings = () => {
                 Security Settings
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-sm font-medium">Two-Factor Authentication</Label>
-                  <p className="text-xs text-muted-foreground">Add an extra layer of security</p>
-                </div>
-                <Switch />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-sm font-medium">Auto-Lock Sessions</Label>
-                  <p className="text-xs text-muted-foreground">Automatically lock after inactivity</p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-
+            <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-sm font-medium">Session Timeout</Label>
-                <Select defaultValue="30min">
+                <Label htmlFor="threat-threshold">Threat Detection Threshold</Label>
+                <Select defaultValue="medium">
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="15min">15 minutes</SelectItem>
-                    <SelectItem value="30min">30 minutes</SelectItem>
-                    <SelectItem value="1hour">1 hour</SelectItem>
-                    <SelectItem value="2hours">2 hours</SelectItem>
+                    <SelectItem value="low">Low (30%)</SelectItem>
+                    <SelectItem value="medium">Medium (50%)</SelectItem>
+                    <SelectItem value="high">High (70%)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="quarantine">Quarantine Action</Label>
+                <Select defaultValue="auto">
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="auto">Auto-quarantine</SelectItem>
+                    <SelectItem value="notify">Notify only</SelectItem>
+                    <SelectItem value="block">Block completely</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Button className="w-full" variant="outline">
+                <Lock className="w-4 h-4 mr-2" />
+                Change Password
+              </Button>
             </CardContent>
           </Card>
 
-          {/* Notification Settings */}
+          {/* Admin/Analyst Only Settings */}
+          {isAnalyst && (
+            <Card className="glass-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-purple-400" />
+                  Advanced Settings
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="scan-frequency">Scan Frequency</Label>
+                  <Select defaultValue="realtime">
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="realtime">Real-time</SelectItem>
+                      <SelectItem value="hourly">Hourly</SelectItem>
+                      <SelectItem value="daily">Daily</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="log-retention">Log Retention Period</Label>
+                  <Select defaultValue="90days">
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="30days">30 Days</SelectItem>
+                      <SelectItem value="90days">90 Days</SelectItem>
+                      <SelectItem value="1year">1 Year</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Button className="w-full" variant="outline">
+                  <Database className="w-4 h-4 mr-2" />
+                  Export Logs
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* System Status */}
           <Card className="glass-card">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Bell className="w-5 h-5 text-blue-400" />
-                Notifications
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-sm font-medium">Email Alerts</Label>
-                  <p className="text-xs text-muted-foreground">Get notified of new threats</p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-sm font-medium">Real-time Notifications</Label>
-                  <p className="text-xs text-muted-foreground">Instant threat detection alerts</p>
-                </div>
-                <Switch defaultChecked />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-sm font-medium">Weekly Reports</Label>
-                  <p className="text-xs text-muted-foreground">Automated weekly summaries</p>
-                </div>
-                <Switch />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Profile Settings */}
-          <Card className="glass-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="w-5 h-5 text-purple-400" />
-                Profile Settings
+                <AlertTriangle className="w-5 h-5 text-yellow-400" />
+                System Status
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <Input id="fullName" defaultValue="Security Admin" />
+              <div className="flex items-center justify-between">
+                <span className="text-sm">AI Engine Status</span>
+                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                  Online
+                </Badge>
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" defaultValue="admin@company.com" />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Role</Label>
-                <Select defaultValue="admin">
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="admin">Administrator</SelectItem>
-                    <SelectItem value="analyst">Security Analyst</SelectItem>
-                    <SelectItem value="user">User</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Button className="w-full">Update Profile</Button>
-            </CardContent>
-          </Card>
-
-          {/* System Settings */}
-          <Card className="glass-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <SettingsIcon className="w-5 h-5 text-orange-400" />
-                System Settings
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label>Default Language</Label>
-                <Select defaultValue="en">
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="es">Spanish</SelectItem>
-                    <SelectItem value="fr">French</SelectItem>
-                    <SelectItem value="de">German</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Timezone</Label>
-                <Select defaultValue="utc">
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="utc">UTC</SelectItem>
-                    <SelectItem value="est">EST</SelectItem>
-                    <SelectItem value="pst">PST</SelectItem>
-                    <SelectItem value="gmt">GMT</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
               <div className="flex items-center justify-between">
-                <div>
-                  <Label className="text-sm font-medium">Dark Mode</Label>
-                  <p className="text-xs text-muted-foreground">Toggle dark/light theme</p>
-                </div>
-                <Switch defaultChecked />
+                <span className="text-sm">Last Update</span>
+                <span className="text-sm text-muted-foreground">2 hours ago</span>
               </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm">Threat Database</span>
+                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
+                  Current
+                </Badge>
+              </div>
+
+              <Button className="w-full" variant="outline">
+                <Shield className="w-4 h-4 mr-2" />
+                Check for Updates
+              </Button>
             </CardContent>
           </Card>
         </div>
-
-        {/* Danger Zone */}
-        <Card className="glass-card border-red-500/30">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-red-400">
-              <Lock className="w-5 h-5" />
-              Danger Zone
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-4 rounded-lg bg-red-500/10 border border-red-500/20">
-              <div>
-                <p className="font-medium text-red-400">Reset All Settings</p>
-                <p className="text-xs text-muted-foreground">This will restore all settings to default values</p>
-              </div>
-              <Button variant="destructive">Reset</Button>
-            </div>
-            
-            <div className="flex items-center justify-between p-4 rounded-lg bg-red-500/10 border border-red-500/20">
-              <div>
-                <p className="font-medium text-red-400">Delete Account</p>
-                <p className="text-xs text-muted-foreground">Permanently delete your account and all data</p>
-              </div>
-              <Button variant="destructive">Delete</Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </Layout>
   );
