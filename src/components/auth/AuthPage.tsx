@@ -31,10 +31,9 @@ export const AuthPage: React.FC = () => {
 
       if (error) {
         setError(error.message);
-      } else if (!isSignUp) {
-        navigate('/');
       } else {
-        setError('Please check your email for a confirmation link.');
+        // Both sign in and sign up should redirect to dashboard
+        navigate('/');
       }
     } catch (err) {
       setError('An unexpected error occurred');
@@ -48,8 +47,24 @@ export const AuthPage: React.FC = () => {
     setError(null);
     
     try {
-      // Guest login with predefined credentials
-      const { error } = await signIn('guest@phishguard.com', 'guest123456');
+      // Guest login with predefined credentials - create account if doesn't exist
+      let { error } = await signIn('guest@phishguard.com', 'guest123456');
+      
+      if (error && error.message.includes('Invalid login credentials')) {
+        // Try to create the guest account first
+        const { error: signUpError } = await signUp('guest@phishguard.com', 'guest123456');
+        if (!signUpError) {
+          // Now try to sign in again
+          const { error: signInError } = await signIn('guest@phishguard.com', 'guest123456');
+          if (!signInError) {
+            navigate('/');
+            return;
+          }
+          error = signInError;
+        } else {
+          error = signUpError;
+        }
+      }
       
       if (error) {
         setError('Guest login temporarily unavailable');
@@ -70,7 +85,23 @@ export const AuthPage: React.FC = () => {
     setError(null);
     
     try {
-      const { error } = await signIn('admin@phishguard.com', 'admin123456');
+      let { error } = await signIn('admin@phishguard.com', 'admin123456');
+      
+      if (error && error.message.includes('Invalid login credentials')) {
+        // Try to create the admin account first
+        const { error: signUpError } = await signUp('admin@phishguard.com', 'admin123456');
+        if (!signUpError) {
+          // Now try to sign in again
+          const { error: signInError } = await signIn('admin@phishguard.com', 'admin123456');
+          if (!signInError) {
+            navigate('/');
+            return;
+          }
+          error = signInError;
+        } else {
+          error = signUpError;
+        }
+      }
       
       if (error) {
         setError('Admin credentials not configured');
@@ -91,7 +122,23 @@ export const AuthPage: React.FC = () => {
     setError(null);
     
     try {
-      const { error } = await signIn('analyst@phishguard.com', 'analyst123456');
+      let { error } = await signIn('analyst@phishguard.com', 'analyst123456');
+      
+      if (error && error.message.includes('Invalid login credentials')) {
+        // Try to create the analyst account first
+        const { error: signUpError } = await signUp('analyst@phishguard.com', 'analyst123456');
+        if (!signUpError) {
+          // Now try to sign in again
+          const { error: signInError } = await signIn('analyst@phishguard.com', 'analyst123456');
+          if (!signInError) {
+            navigate('/');
+            return;
+          }
+          error = signInError;
+        } else {
+          error = signUpError;
+        }
+      }
       
       if (error) {
         setError('Analyst credentials not configured');
@@ -128,8 +175,12 @@ export const AuthPage: React.FC = () => {
             </p>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="standard" className="space-y-6">
+            <Tabs defaultValue="guest" className="space-y-6">
               <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="guest" className="flex items-center gap-2">
+                  <Shield className="w-4 h-4" />
+                  Guest
+                </TabsTrigger>
                 <TabsTrigger value="standard" className="flex items-center gap-2">
                   <User className="w-4 h-4" />
                   Standard
@@ -142,10 +193,6 @@ export const AuthPage: React.FC = () => {
                   <Users className="w-4 h-4" />
                   Analyst
                 </TabsTrigger>
-                <TabsTrigger value="guest" className="flex items-center gap-2">
-                  <Shield className="w-4 h-4" />
-                  Guest
-                </TabsTrigger>
               </TabsList>
 
               {error && (
@@ -154,6 +201,30 @@ export const AuthPage: React.FC = () => {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
+
+              {/* Guest Login - Now First */}
+              <TabsContent value="guest" className="space-y-4">
+                <div className="p-4 rounded-lg bg-gradient-to-r from-green-500/20 to-teal-500/20 border border-green-500/30 mb-4">
+                  <h3 className="text-lg font-semibold text-green-400 mb-2">Guest Access</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Instant demo access to explore PhishGuard AI features
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handleGuestLogin}
+                  className="w-full bg-green-500 hover:bg-green-600"
+                  disabled={loading}
+                >
+                  {loading ? 'Connecting...' : 'Continue as Guest'}
+                </Button>
+
+                <div className="p-3 rounded-lg bg-background/20 border border-border/30">
+                  <p className="text-xs text-muted-foreground text-center">
+                    No sign up required - Instant access with demo data
+                  </p>
+                </div>
+              </TabsContent>
 
               {/* Standard User Login */}
               <TabsContent value="standard" className="space-y-4">

@@ -31,6 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -39,6 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session?.user?.email);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -48,27 +50,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    console.log('Attempting sign in for:', email);
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    console.log('Sign in result:', error ? 'Error: ' + error.message : 'Success');
     return { error };
   };
 
   const signUp = async (email: string, password: string) => {
-    const redirectUrl = `${window.location.origin}/`;
+    console.log('Attempting sign up for:', email);
     
+    // Sign up without email confirmation for immediate access
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl
+        emailRedirectTo: `${window.location.origin}/`,
+        data: {
+          email_confirm: false // Skip email confirmation
+        }
       }
     });
+    
+    console.log('Sign up result:', error ? 'Error: ' + error.message : 'Success');
     return { error };
   };
 
   const signOut = async () => {
+    console.log('Signing out');
     await supabase.auth.signOut();
   };
 
