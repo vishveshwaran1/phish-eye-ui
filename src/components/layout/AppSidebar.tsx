@@ -22,6 +22,10 @@ import {
   Shield
 } from 'lucide-react';
 
+interface AppSidebarProps {
+  userRole?: string;
+}
+
 const navigationItems = [
   { title: 'Dashboard', url: '/', icon: LayoutDashboard, category: 'main' },
   { title: 'Scan Email', url: '/scan', icon: ScanSearch, category: 'main' },
@@ -38,7 +42,7 @@ const categoryLabels = {
   config: 'Configuration'
 };
 
-export function AppSidebar() {
+export function AppSidebar({ userRole }: AppSidebarProps) {
   const { state } = useSidebar();
   const location = useLocation();
   const isCollapsed = state === 'collapsed';
