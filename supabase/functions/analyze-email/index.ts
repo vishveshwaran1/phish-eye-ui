@@ -41,9 +41,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Starting email analysis with Gemini AI...');
 
-    // Call Gemini API for email analysis - using the correct v1 endpoint
+    // Call Gemini API for email analysis - using the correct v1 endpoint with gemini-1.5-flash
     const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${geminiApiKey}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`,
       {
         method: 'POST',
         headers: {
@@ -159,7 +159,7 @@ const handler = async (req: Request): Promise<Response> => {
           .insert({
             scanned_email_id: emailRecord.id,
             analysis_type: 'phishing_detection',
-            model_used: 'gemini-pro',
+            model_used: 'gemini-1.5-flash',
             analysis_result: analysisResult,
             confidence_score: analysisResult.confidence * 100,
             processing_time_ms: Date.now() - Date.now() // This would be calculated properly in production
