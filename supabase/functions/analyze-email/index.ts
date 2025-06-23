@@ -41,9 +41,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Starting email analysis with Gemini AI...');
 
-    // Call Gemini API for email analysis
+    // Call Gemini API for email analysis - using the correct v1 endpoint
     const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${geminiApiKey}`,
       {
         method: 'POST',
         headers: {
@@ -78,6 +78,8 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     if (!geminiResponse.ok) {
+      const errorText = await geminiResponse.text();
+      console.error(`Gemini API error: ${geminiResponse.status} - ${errorText}`);
       throw new Error(`Gemini API error: ${geminiResponse.statusText}`);
     }
 
