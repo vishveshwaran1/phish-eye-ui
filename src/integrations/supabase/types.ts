@@ -9,184 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      ai_analysis: {
-        Row: {
-          analysis_result: Json
-          analysis_type: string
-          confidence_score: number | null
-          created_at: string | null
-          id: string
-          model_used: string
-          processing_time_ms: number | null
-          scanned_email_id: string
-        }
-        Insert: {
-          analysis_result: Json
-          analysis_type: string
-          confidence_score?: number | null
-          created_at?: string | null
-          id?: string
-          model_used: string
-          processing_time_ms?: number | null
-          scanned_email_id: string
-        }
-        Update: {
-          analysis_result?: Json
-          analysis_type?: string
-          confidence_score?: number | null
-          created_at?: string | null
-          id?: string
-          model_used?: string
-          processing_time_ms?: number | null
-          scanned_email_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ai_analysis_scanned_email_id_fkey"
-            columns: ["scanned_email_id"]
-            isOneToOne: false
-            referencedRelation: "scanned_emails"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      email_accounts: {
-        Row: {
-          access_token_encrypted: string | null
-          created_at: string | null
-          email_address: string
-          id: string
-          is_active: boolean | null
-          last_sync: string | null
-          provider: string
-          refresh_token_encrypted: string | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          access_token_encrypted?: string | null
-          created_at?: string | null
-          email_address: string
-          id?: string
-          is_active?: boolean | null
-          last_sync?: string | null
-          provider: string
-          refresh_token_encrypted?: string | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          access_token_encrypted?: string | null
-          created_at?: string | null
-          email_address?: string
-          id?: string
-          is_active?: boolean | null
-          last_sync?: string | null
-          provider?: string
-          refresh_token_encrypted?: string | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      scanned_emails: {
-        Row: {
-          content: string | null
-          created_at: string | null
-          email_account_id: string
-          flagged_keywords: string[] | null
-          headers: Json | null
-          id: string
-          message_id: string
-          recipient: string | null
-          risk_level: Database["public"]["Enums"]["email_risk_level"] | null
-          risk_score: number | null
-          scan_details: Json | null
-          scan_status: Database["public"]["Enums"]["scan_status"] | null
-          scanned_at: string | null
-          sender: string
-          subject: string | null
-          suspicious_links: string[] | null
-          user_id: string
-        }
-        Insert: {
-          content?: string | null
-          created_at?: string | null
-          email_account_id: string
-          flagged_keywords?: string[] | null
-          headers?: Json | null
-          id?: string
-          message_id: string
-          recipient?: string | null
-          risk_level?: Database["public"]["Enums"]["email_risk_level"] | null
-          risk_score?: number | null
-          scan_details?: Json | null
-          scan_status?: Database["public"]["Enums"]["scan_status"] | null
-          scanned_at?: string | null
-          sender: string
-          subject?: string | null
-          suspicious_links?: string[] | null
-          user_id: string
-        }
-        Update: {
-          content?: string | null
-          created_at?: string | null
-          email_account_id?: string
-          flagged_keywords?: string[] | null
-          headers?: Json | null
-          id?: string
-          message_id?: string
-          recipient?: string | null
-          risk_level?: Database["public"]["Enums"]["email_risk_level"] | null
-          risk_score?: number | null
-          scan_details?: Json | null
-          scan_status?: Database["public"]["Enums"]["scan_status"] | null
-          scanned_at?: string | null
-          sender?: string
-          subject?: string | null
-          suspicious_links?: string[] | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "scanned_emails_email_account_id_fkey"
-            columns: ["email_account_id"]
-            isOneToOne: false
-            referencedRelation: "email_accounts"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      threat_patterns: {
-        Row: {
-          created_at: string | null
-          id: string
-          is_active: boolean | null
-          pattern_data: Json
-          pattern_type: string
-          severity: Database["public"]["Enums"]["email_risk_level"]
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          is_active?: boolean | null
-          pattern_data: Json
-          pattern_type: string
-          severity: Database["public"]["Enums"]["email_risk_level"]
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          is_active?: boolean | null
-          pattern_data?: Json
-          pattern_type?: string
-          severity?: Database["public"]["Enums"]["email_risk_level"]
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
@@ -195,8 +18,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      email_risk_level: "safe" | "low" | "medium" | "high" | "critical"
-      scan_status: "pending" | "scanning" | "completed" | "failed"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -311,9 +133,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      email_risk_level: ["safe", "low", "medium", "high", "critical"],
-      scan_status: ["pending", "scanning", "completed", "failed"],
-    },
+    Enums: {},
   },
 } as const
